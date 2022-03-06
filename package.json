@@ -1,0 +1,29 @@
+{
+  "name": "stronger-scraper",
+  "version": "1.0.0",
+  "description": "A Node application that utilizes Puppeteer to scrape the Stronger Skatepark website's occupancy counter and sends me a text message whenever the park becomes empty during business hours.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrew-mcewen/stronger-scraper.git"
+  },
+  "keywords": [
+    "Stronger",
+    "Skatepark",
+    "Web",
+    "Scraping"
+  ],
+  "author": "Andrew McEwen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrew-mcewen/stronger-scraper/issues"
+  },
+  "homepage": "https://github.com/andrew-mcewen/stronger-scraper#readme",
+  "dependencies": {
+    "nodemailer": "^6.7.2",
+    "puppeteer": "^13.4.1"
+  }
+}
