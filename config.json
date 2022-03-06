@@ -1,0 +1,22 @@
+{
+    "transporter": {
+        "host": "",
+        "port": 587,
+        "secure": false,
+        "requireTLS": true,
+        "auth": {
+            "user": "",
+            "pass": ""
+        }
+    },
+    "mailOptions": {
+        "from": "Stronger Scraper",
+        "to": "",
+        "subject": "Stronger Skatepark is Empty!",
+        "text": "Let's goooooo!"
+    },
+    "app": {
+        "url": "",
+        "interval": 60000
+    }
+}
