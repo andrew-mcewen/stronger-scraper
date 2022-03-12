@@ -1,22 +1,28 @@
 {
-    "transporter": {
-        "host": "",
-        "port": 587,
-        "secure": false,
-        "requireTLS": true,
-        "auth": {
-            "user": "",
-            "pass": ""
+    "app": {
+        "url": "https://portal.rockgympro.com/portal/public/d844b07ec625c3f19d0a007065b184fa/occupancy?&iframeid=occupancyCounter&fId=",
+        "counterElementId": "count",
+        "interval": 10000,
+        "levels": {
+            "busy": 10,
+            "quiet": 5,
+            "dead": 0 
         }
     },
     "mailOptions": {
         "from": "Stronger Scraper",
-        "to": "",
-        "subject": "Stronger Skatepark is Empty!",
+        "to": "andrewmcewen84@gmail.com",
+        "subject": "Stronger Skatepark is ",
         "text": "Let's goooooo!"
     },
-    "app": {
-        "url": "",
-        "interval": 60000
+    "transporter": {
+        "host": "smtp.gmail.com",
+        "port": 587,
+        "secure": false,
+        "requireTLS": true,
+        "auth": {
+            "user": "andrewmcewen84@gmail.com",
+            "pass": "666x4-oG$N5aG1"
+        }
     }
 }

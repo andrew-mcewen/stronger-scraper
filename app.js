@@ -1,47 +1,55 @@
 const puppeteer = require('puppeteer');
 const nodemailer = require('nodemailer');
+const moment = require('moment-timezone');
 const config = require('./config.json');
+const transporter = nodemailer.createTransport(config.transporter);
+const mailOptions = config.mailOptions;
 
-const transporter = nodemailer.createTransport({
-    host: config.transporter.host,
-    port: config.transporter.port,
-    secure: config.transporter.secure,
-    requireTLS: config.transporter.requireTLS,
-    auth: {
-        user: config.transporter.auth.user,
-        pass: config.transporter.auth.pass
-    }
-});
-
-const mailOptions = {
-    from: config.mailOptions.from,
-    to: config.mailOptions.to,
-    subject: config.mailOptions.subject,
-    text: config.mailOptions.text
-};
-
-const app = async () => {
+const app = () => {
     try {
-        const browser = await puppeteer.launch(); 
-        const page = await browser.newPage();        
-        
+        let previousCount = 0;
+        let currentCount = 0;
+        let message = '';
+        let sendEmail = false;
+
         setInterval(async () => {
-            let previousCount = 12;
-            let currentCount = 0;    
-            
+            const browser = await puppeteer.launch(); 
+            const page = await browser.newPage();    
+
             await page.goto(config.app.url, { waitUntil: 'domcontentloaded' });
             
             previousCount = currentCount;
-            currentCount = await page.evaluate(() => { return Number(document.getElementById('count').innerHTML); });                        
+            currentCount = await page.evaluate(counterElementId => { return Number(document.getElementById(counterElementId).innerText); }, config.app.counterElementId);                        
+
+            console.log(`Previous riders: ${previousCount}`);
+            console.log(`Current riders: ${currentCount}\n`);
+
+            if (previousCount == currentCount) {
+                message = 'No riders checked in or out';
+            } else if (previousCount < currentCount) {     
+                message = 'Rider checked in';        
+            } else if (currentCount >= config.app.levels.dead && currentCount < config.app.levels.quiet ) {
+                message = 'Stronger Skatepark is now dead';
+                sendEmail = true;
+            } else if (currentCount >= config.app.levels.quiet && currentCount < config.app.levels.busy) {
+                message = 'Stronger Skatepark is now quiet';
+                sendEmail = true;
+            } else if (currentCount >= config.app.levels.busy) {
+                message = 'Stronger Skatepark is still busy';
+                sendEmail = true;
+            }
             
-            if (previousCount >= 0 && currentCount == 0) {               
-                console.log(`Sending notification email to ${ config.mailOptions.to }`);
-                const info = await transporter.sendMail(mailOptions);
+            console.log(`${ moment().tz('US/Pacific').format('llll') }: ${ message }\n`);
+            
+            if (sendEmail) {
+                const info = await transporter.sendMail(mailOptions);    
                 console.log(`Email sent: ${info.response}`);
-            }    
-            
+            }
+
             await browser.close();
+
         }, config.app.interval);
+
     } catch (error) {
         console.log(error);
     }
